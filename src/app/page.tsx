@@ -1,9 +1,9 @@
-import CypherSolver from "@/components/cyphers"
+import CipherSolver from "@/components/cipher"
 
 export default function Home() {
 	return (
 		<div  className="min-h-screen flex justify-center items-center">
-			<CypherSolver></CypherSolver>
+			<CipherSolver></CipherSolver>
 		</div>
 	);
 }
