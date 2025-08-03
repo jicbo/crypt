@@ -27,13 +27,21 @@ export interface ComboboxContent {
 
 
 interface ComboboxProps {
-	placeholder_text: string;
-	contents: ComboboxContent[];
+	placeholder_text?: string;
+	contents?: ComboboxContent[];
+	onChange?: (value: string) => void; // Add this line
 }
 
-export function Combobox({ placeholder_text,contents }: ComboboxProps) {
+export function Combobox({ placeholder_text = "items", contents = [], onChange }: ComboboxProps) {
 	const [open, setOpen] = React.useState(false)
 	const [value, setValue] = React.useState("")
+
+	const handleSelect = (currentValue: string) => {
+		const newValue = currentValue === value ? "" : currentValue
+		setValue(newValue)
+		setOpen(false)
+		if (onChange) onChange(newValue) // Call the callback
+	}
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -60,10 +68,7 @@ export function Combobox({ placeholder_text,contents }: ComboboxProps) {
 								<CommandItem
 									key={content.value}
 									value={content.value}
-									onSelect={(currentValue) => {
-										setValue(currentValue === value ? "" : currentValue)
-										setOpen(false)
-									}}
+									onSelect={handleSelect} // Use the handler
 								>
 									{content.label}
 									<Check
