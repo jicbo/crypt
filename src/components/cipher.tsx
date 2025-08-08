@@ -1,10 +1,10 @@
 "use client"
-import { Textarea } from "@/components/ui/textarea"
-import { Card } from "./ui/card"
-import { Combobox } from "./ui/combobox"
-import { Button } from "./ui/button"
-import { ArrowLeftRight } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { Combobox } from "@/components/ui/combobox"
 import * as React from "react"
+
+import { CeasarCipher } from "@/components/ciphers/ceasar"
+import MorseCode from "@/components/ciphers/morse"
 
 const ciphers_list = [
     { value: "ceasar", label: "Ceasar cipher" },
@@ -16,20 +16,21 @@ export default function CipherSolver() {
 
     return (
         <Card className="p-8 flex flex-col justify-center items-center">
-            <div className="flex flex-row space-x-3 items-center">
-                <Textarea className="resize-none"></Textarea>
-                <Button variant={"ghost"}>
-                    <ArrowLeftRight />
-                </Button>
-                <Textarea className="resize-none"></Textarea>
-            </div>
             <Combobox
                 placeholder_text="ciphers"
                 contents={ciphers_list}
-                onChange={setSelectedCipher} // Pass the handler
+                onChange={setSelectedCipher}
             />
-            <Button>Convert</Button>
-            {selectedCipher == "morse" ? <p>hello</p> : ""}
+            {(() => {
+                switch (selectedCipher) {
+                    case "ceasar":
+                        return <CeasarCipher></CeasarCipher>;
+                    case "morse":
+                        return <MorseCode></MorseCode>;
+                    default:
+                        return null;
+                }
+            })()}
         </Card>
     );
 }
