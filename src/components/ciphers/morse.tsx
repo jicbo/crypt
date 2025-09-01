@@ -4,7 +4,7 @@ import TextSwap from "@/components/ui/text-swap"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import * as React from "react"
 
-const chars = {
+const chars: Record<string, string> = {
     "A": ".-",
     "B": "-...",
     "C": "-.-.",
@@ -86,7 +86,11 @@ export default function MorseCode() {
                 )
                 .join(" ")
         } else {
-            return "Not implemented yet"
+            return s
+                .toUpperCase()
+                .split("")
+                .map(char => chars[char] || "")
+                .join(" ")
         }
     }
 
@@ -98,7 +102,8 @@ export default function MorseCode() {
                 setInputText={setInputText}
                 setOutputText={setOutputText}
             />
-            <Button onClick={() => setOutputText(MorseConvert(inputText))}>Convert</Button>
+            <Button onClick={() => setOutputText(MorseConvert(inputText, false))}>Encode</Button>
+            <Button onClick={() => setOutputText(MorseConvert(inputText))}>Decode</Button>
             <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
                     <AccordionTrigger>How to use?</AccordionTrigger>
