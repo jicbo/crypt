@@ -28,10 +28,10 @@ export function CeasarCipher() {
         <CipherLayout encode={encodeCeasar} decode={decodeCeasar}>
             <Number
                 className="w-20"
-                onChange={(value) => setShiftValue(parseInt(value.target.value))}
+                onChange={(newValue) => setShiftValue(newValue !== undefined ? newValue : 0)}
                 placeholder="Shift"
-                min={-50}
-                max={50}
+                min={0}
+                max={200}
                 step={1}
                 value={shiftValue}
             />

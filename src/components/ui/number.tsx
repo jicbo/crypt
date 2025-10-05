@@ -1,27 +1,57 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label";
+import React from "react";
 
-export function Number({ placeholder, min, max, onChange, ...props }: React.ComponentProps<"input">) {
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/[^0-9.-]/g, "");
-    if (value && min !== undefined && +value < +min) value = String(min);
-    if (value && max !== undefined && +value > +max) value = String(max);
-    e.target.value = value;
-    // Call both onInput and onChange if provided
-    if (props.onInput) props.onInput(e);
-    if (onChange) onChange(e);
+interface NumberInputProps extends Omit<React.ComponentProps<typeof Input>, 'type' | 'onChange' | 'value'> {
+  placeholder?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  value?: number;
+  onChange?: (value: number | undefined) => void;
+}
+
+export function Number({ placeholder, min, max, step, value, onChange, ...props }: NumberInputProps) {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    let parsedValue: number | undefined;
+
+    if (inputValue === "") {
+      parsedValue = undefined;
+    } else {
+      const num = parseFloat(inputValue);
+      if (!isNaN(num)) {
+        parsedValue = num;
+      } else {
+        return;
+      }
+    }
+
+    if (parsedValue !== undefined) {
+      if (min !== undefined && parsedValue < min) {
+        parsedValue = min;
+      }
+      if (max !== undefined && parsedValue > max) {
+        parsedValue = max;
+      }
+    }
+
+    if (onChange) {
+      onChange(parsedValue);
+    }
   };
 
   return (
     <div className="space-y-1">
       {placeholder ? <Label>{placeholder}</Label> : null}
       <Input
-        type="text"
+        type="number"
         min={min}
         max={max}
+        step={step}
+        value={value !== undefined ? String(value) : ""}
+        onChange={handleInputChange}
         {...props}
-        onInput={handleInput}
-        onChange={onChange}
       />
     </div>
   );
