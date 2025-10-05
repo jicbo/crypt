@@ -1,8 +1,6 @@
 "use client"
-import { Button } from "@/components/ui/button"
-import TextSwap from "@/components/ui/text-swap"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import * as React from "react"
+import CipherLayout from "./CipherLayout"
 
 const chars: Record<string, string> = {
     "A": ".-",
@@ -63,47 +61,35 @@ const chars: Record<string, string> = {
 }
 
 export default function MorseCode() {
-    const [inputText, setInputText] = React.useState<string>("")
-    const [outputText, setOutputText] = React.useState<string>("")
+    
+    const encodeMorse = (s: string) => {
+        return s
+            .toUpperCase()
+            .split("")
+            .map(char => chars[char] || "")
+            .join(" ")
+    }
 
+    const decodeMorse = (s: string) => {
+        const x = s.split("/")
+        const morseToChar = Object.entries(chars).reduce((acc, [char, morse]) => {
+            acc[morse] = char
+            return acc
+        }, {} as Record<string, string>)
 
-
-    function MorseConvert(s: string, totext: boolean = true) {
-        if (totext) {
-            const x = s.split("/")
-            const morseToChar = Object.entries(chars).reduce((acc, [char, morse]) => {
-                acc[morse] = char
-                return acc
-            }, {} as Record<string, string>)
-
-            return x
-                .map(word =>
-                    word
-                        .trim()
-                        .split(" ")
-                        .map(code => morseToChar[code] || "")
-                        .join("")
-                )
-                .join(" ")
-        } else {
-            return s
-                .toUpperCase()
-                .split("")
-                .map(char => chars[char] || "")
-                .join(" ")
-        }
+        return x
+            .map(word =>
+                word
+                    .trim()
+                    .split(" ")
+                    .map(code => morseToChar[code] || "")
+                    .join("")
+            )
+            .join(" ")
     }
 
     return (
-        <div className="flex flex-col space-y-3 items-center">
-            <TextSwap
-                inputText={inputText}
-                outputText={outputText}
-                setInputText={setInputText}
-                setOutputText={setOutputText}
-            />
-            <Button onClick={() => setOutputText(MorseConvert(inputText, false))}>Encode</Button>
-            <Button onClick={() => setOutputText(MorseConvert(inputText))}>Decode</Button>
+        <CipherLayout encode={encodeMorse} decode={decodeMorse}>
             <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
                     <AccordionTrigger>How to use?</AccordionTrigger>
@@ -112,6 +98,6 @@ export default function MorseCode() {
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
-        </div>
+        </CipherLayout>
     );
 }

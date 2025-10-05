@@ -1,18 +1,16 @@
 "use client"
-import { Button } from "@/components/ui/button"
+import React, { useState } from "react"
 import { Number } from "@/components/ui/number"
-import TextSwap from "@/components/ui/text-swap"
-import * as React from "react"
+import CipherLayout from "./CipherLayout"
 
 
 export function CeasarCipher() {
-    const [inputText, setInputText] = React.useState<string>("")
-    const [outputText, setOutputText] = React.useState<string>("")
-    const [shiftValue, setShiftValue] = React.useState<number>(3)
+
+    const [shiftValue, setShiftValue] = useState<number>(3)
 
     const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-    function CeasarConvert(text: string, shift: number) {
+    const ceasarConvert = (text: string, shift: number) => {
         const l: string[] = text.split("")
         for (let i = 0; i < l.length; i++) {
             if (alphabet.indexOf(l[i].toLowerCase()) > -1) {
@@ -21,19 +19,14 @@ export function CeasarCipher() {
                 l[i] = upper ? x.toUpperCase() : x
             }
         }
-
         return l.join("")
     }
 
+    const encodeCeasar = (text: string) => ceasarConvert(text, shiftValue);
+    const decodeCeasar = (text: string) => ceasarConvert(text, -shiftValue);
 
     return (
-        <div className="flex flex-col space-y-3 items-center">
-            <TextSwap
-                inputText={inputText}
-                outputText={outputText}
-                setInputText={setInputText}
-                setOutputText={setOutputText}
-            />
+        <CipherLayout encode={encodeCeasar} decode={decodeCeasar}>
             <Number
                 className="w-20"
                 onChange={(value) => setShiftValue(parseInt(value.target.value))}
@@ -41,8 +34,8 @@ export function CeasarCipher() {
                 min={-50}
                 max={50}
                 step={1}
+                value={shiftValue}
             />
-            <Button onClick={() => setOutputText(CeasarConvert(inputText, shiftValue))}>Convert</Button>
-        </div>
+        </CipherLayout>
     )
 }
