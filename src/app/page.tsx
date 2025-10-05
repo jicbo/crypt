@@ -1,4 +1,4 @@
-import CipherSolver from "@/components/cipher"
+import CipherSolver from "@/components/main"
 
 export default function Home() {
 	return (

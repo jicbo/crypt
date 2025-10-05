@@ -1,7 +1,7 @@
 "use client"
 import { Card } from "@/components/ui/card"
 import { Combobox } from "@/components/ui/combobox"
-import * as React from "react"
+import React, {useState} from "react"
 
 import { CeasarCipher } from "@/components/ciphers/ceasar"
 import MorseCode from "@/components/ciphers/morse"
@@ -12,7 +12,7 @@ const ciphers_list = [
 ]
 
 export default function CipherSolver() {
-    const [selectedCipher, setSelectedCipher] = React.useState<string>("")
+    const [selectedCipher, setSelectedCipher] = useState<string>("")
 
     return (
         <Card className="p-8 flex flex-col justify-center items-center">
