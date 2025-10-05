@@ -1,64 +1,7 @@
 "use client"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import CipherLayout from "./CipherLayout"
-
-const chars: Record<string, string> = {
-    "A": ".-",
-    "B": "-...",
-    "C": "-.-.",
-    "D": "-..",
-    "E": ".",
-    "F": "..-.",
-    "G": "--.",
-    "H": "....",
-    "I": "..",
-    "J": ".---",
-    "K": "-.-",
-    "L": ".-..",
-    "M": "--",
-    "N": "-.",
-    "O": "---",
-    "P": ".--.",
-    "Q": "--.-",
-    "R": ".-.",
-    "S": "...",
-    "T": "-",
-    "U": "..-",
-    "V": "...-",
-    "W": ".--",
-    "X": "-..-",
-    "Y": "-.--",
-    "Z": "--..",
-    "0": "-----",
-    "1": ".----",
-    "2": "..---",
-    "3": "...--",
-    "4": "....-",
-    "5": ".....",
-    "6": "-....",
-    "7": "--...",
-    "8": "---..",
-    "9": "----.",
-    ".": ".-.-.-",
-    ",": "--..--",
-    "?": "..--..",
-    "'": ".----.",
-    "!": "-.-.--",
-    "/": "-..-.",
-    "(": "-.--.",
-    ")": "-.--.-",
-    "&": ".-...",
-    ":": "---...",
-    ";": "-.-.-.",
-    "=": "-...-",
-    "+": ".-.-.",
-    "-": "-....-",
-    "_": "..--.-",
-    '"': ".-..-.",
-    "$": "...-..-",
-    "@": ".--.-.",
-    " ": "/"
-}
+import { MORSE_CODE_CHARS } from "@/lib/constants"
 
 export default function MorseCode() {
     
@@ -66,13 +9,13 @@ export default function MorseCode() {
         return s
             .toUpperCase()
             .split("")
-            .map(char => chars[char] || "")
+            .map(char => MORSE_CODE_CHARS[char] || "")
             .join(" ")
     }
 
     const decodeMorse = (s: string) => {
         const x = s.split("/")
-        const morseToChar = Object.entries(chars).reduce((acc, [char, morse]) => {
+        const morseToChar = Object.entries(MORSE_CODE_CHARS).reduce((acc, [char, morse]) => {
             acc[morse] = char
             return acc
         }, {} as Record<string, string>)

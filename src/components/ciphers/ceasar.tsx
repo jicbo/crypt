@@ -2,20 +2,19 @@
 import React, { useState } from "react"
 import { Number } from "@/components/ui/number"
 import CipherLayout from "./CipherLayout"
+import { ALPHABET } from "@/lib/constants"
 
 
 export function CeasarCipher() {
 
     const [shiftValue, setShiftValue] = useState<number>(3)
 
-    const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
     const ceasarConvert = (text: string, shift: number) => {
         const l: string[] = text.split("")
         for (let i = 0; i < l.length; i++) {
-            if (alphabet.indexOf(l[i].toLowerCase()) > -1) {
+            if (ALPHABET.indexOf(l[i].toLowerCase()) > -1) {
                 const upper = l[i] === l[i].toUpperCase()
-                const x = alphabet[Math.abs(alphabet.indexOf(l[i].toLowerCase()) + shift) % alphabet.length]
+                const x = ALPHABET[Math.abs(ALPHABET.indexOf(l[i].toLowerCase()) + shift) % ALPHABET.length]
                 l[i] = upper ? x.toUpperCase() : x
             }
         }

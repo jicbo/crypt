@@ -13,6 +13,11 @@ export default function CipherLayout({ encode, decode, children }: CipherLayoutP
     const [inputText, setInputText] = useState("")
     const [outputText, setOutputText] = useState("")
 
+    function handleClear() {
+        setInputText("")
+        setOutputText("")
+    }
+
     return (
         <div className="flex flex-col space-y-3 items-center">
             <TextSwap
@@ -24,6 +29,9 @@ export default function CipherLayout({ encode, decode, children }: CipherLayoutP
             <div className="flex space-x-2">
                 <Button onClick={() => setOutputText(encode(inputText))}>Encode</Button>
                 <Button onClick={() => setOutputText(decode(inputText))}>Decode</Button>
+                <Button variant="outline" onClick={handleClear}>
+                    Clear
+                </Button>
             </div>
             {children}
         </div>
