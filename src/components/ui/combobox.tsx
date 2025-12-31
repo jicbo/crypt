@@ -29,18 +29,25 @@ export interface ComboboxContent {
 interface ComboboxProps {
 	placeholder_text?: string;
 	contents?: ComboboxContent[];
-	onChange?: (value: string) => void; // Add this line
+	value?: string;
+	onChange?: (value: string) => void;
 }
 
-export function Combobox({ placeholder_text = "items", contents = [], onChange }: ComboboxProps) {
+export function Combobox({ placeholder_text = "items", contents = [], value: externalValue, onChange }: ComboboxProps) {
 	const [open, setOpen] = React.useState(false)
-	const [value, setValue] = React.useState("")
+	const [value, setValue] = React.useState(externalValue || "")
+
+	React.useEffect(() => {
+		if (externalValue !== undefined) {
+			setValue(externalValue)
+		}
+	}, [externalValue])
 
 	const handleSelect = (currentValue: string) => {
-		const newValue = currentValue === value ? "" : currentValue
+		const newValue = currentValue
 		setValue(newValue)
 		setOpen(false)
-		if (onChange) onChange(newValue) // Call the callback
+		if (onChange) onChange(newValue)
 	}
 
 	return (
@@ -50,7 +57,7 @@ export function Combobox({ placeholder_text = "items", contents = [], onChange }
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className="w-[200px] justify-between"
+					className="w-full justify-between"
 				>
 					{value
 						? contents.find((content) => content.value === value)?.label
@@ -68,7 +75,7 @@ export function Combobox({ placeholder_text = "items", contents = [], onChange }
 								<CommandItem
 									key={content.value}
 									value={content.value}
-									onSelect={handleSelect} // Use the handler
+									onSelect={handleSelect}
 								>
 									{content.label}
 									<Check

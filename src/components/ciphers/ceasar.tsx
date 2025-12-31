@@ -2,39 +2,25 @@
 import React, { useState } from "react"
 import { Number } from "@/components/ui/number"
 import CipherLayout from "./CipherLayout"
-import { ALPHABET } from "@/lib/constants"
-
+import { caesarConvert } from "@/lib/ciphers/caesar"
 
 export function CeasarCipher() {
+	const [shiftValue, setShiftValue] = useState<number>(3)
 
-    const [shiftValue, setShiftValue] = useState<number>(3)
+	const encodeCeasar = (text: string) => caesarConvert(text, shiftValue);
+	const decodeCeasar = (text: string) => caesarConvert(text, -shiftValue);
 
-    const ceasarConvert = (text: string, shift: number) => {
-        const l: string[] = text.split("")
-        for (let i = 0; i < l.length; i++) {
-            if (ALPHABET.indexOf(l[i].toLowerCase()) > -1) {
-                const upper = l[i] === l[i].toUpperCase()
-                const x = ALPHABET[Math.abs(ALPHABET.indexOf(l[i].toLowerCase()) + shift) % ALPHABET.length]
-                l[i] = upper ? x.toUpperCase() : x
-            }
-        }
-        return l.join("")
-    }
-
-    const encodeCeasar = (text: string) => ceasarConvert(text, shiftValue);
-    const decodeCeasar = (text: string) => ceasarConvert(text, -shiftValue);
-
-    return (
-        <CipherLayout encode={encodeCeasar} decode={decodeCeasar}>
-            <Number
-                className="w-20"
-                onChange={(newValue) => setShiftValue(newValue !== undefined ? newValue : 0)}
-                placeholder="Shift"
-                min={0}
-                max={200}
-                step={1}
-                value={shiftValue}
-            />
-        </CipherLayout>
-    )
+	return (
+		<CipherLayout encode={encodeCeasar} decode={decodeCeasar}>
+			<Number
+				className="w-20"
+				onChange={(newValue) => setShiftValue(newValue !== undefined ? newValue : 0)}
+				placeholder="Shift"
+				min={0}
+				max={200}
+				step={1}
+				value={shiftValue}
+			/>
+		</CipherLayout>
+	)
 }
