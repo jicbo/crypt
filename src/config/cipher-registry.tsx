@@ -1,4 +1,4 @@
-import { CeasarCipher } from "@/components/ciphers/ceasar";
+import { CaesarCipher } from "@/components/ciphers/caesar";
 import MorseCode from "@/components/ciphers/morse";
 import AtbashCipher from "@/components/ciphers/atbash";
 import VigenereCipher from "@/components/ciphers/vigenere";
@@ -37,7 +37,7 @@ export const CIPHER_REGISTRY: Record<string, CipherTool> = {
     slug: "caesar",
     title: "Caesar Cipher",
     description: "Shift alphabets by a set amount to encode messages.",
-    component: CeasarCipher,
+    component: CaesarCipher,
     logic: {
       encode: (text, params) => caesarConvert(text, params.shift || 0),
       decode: (text, params) => caesarConvert(text, -(params.shift || 0)),
