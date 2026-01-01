@@ -1,4 +1,4 @@
-# Ciphers
+# Crypt
 
 Simple tool for encoding and decoding text using various cipher algorithms.
 

@@ -8,7 +8,7 @@ export default function GalleryPage() {
         <div className="container mx-auto px-6 py-12 space-y-12">
             <div className="space-y-4 text-center max-w-2xl mx-auto">
                 <h1 className="text-4xl font-bold tracking-tight">
-                    Cipher Gallery
+                    Crypt Gallery
                 </h1>
                 <p className="text-lg text-muted-foreground">
                     Standalone tools for every supported algorithm. Pick any tool to start encoding or decoding.

@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Cyphers",
-	description: "Cypher tools",
+	title: "Crypt",
+	description: "Encryption and decryption tools",
 };
 
 export default function RootLayout({
