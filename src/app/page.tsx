@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ArrowDown, RefreshCcw } from "lucide-react"
-import { CIPHER_REGISTRY, getAllCiphers, CipherTool } from "@/config/cipher-registry"
+import { CIPHER_REGISTRY, getSortedCiphers, CipherTool } from "@/config/cipher-registry"
 import Link from "next/link"
 
 export default function Home() {
@@ -20,6 +20,12 @@ export default function Home() {
 	const [targetParams, setTargetParams] = useState<Record<string, any>>({})
 
 	const isFirstLoad = React.useRef(true)
+
+	useEffect(() => {
+		if (isFirstLoad.current) return
+		const state = { inputText, sourceSlug, targetSlug, sourceParams, targetParams }
+		localStorage.setItem("DIRECT_CONVERTER_STATE", JSON.stringify(state))
+	}, [inputText, sourceSlug, targetSlug, sourceParams, targetParams])
 
 	useEffect(() => {
 		const saved = localStorage.getItem("DIRECT_CONVERTER_STATE")
@@ -35,39 +41,38 @@ export default function Home() {
 				console.error("Failed to load saved state", e)
 			}
 		}
-		isFirstLoad.current = false
+		// We set this to false after state updates have been scheduled
+		setTimeout(() => {
+			isFirstLoad.current = false
+		}, 0)
 	}, [])
 
-	useEffect(() => {
-		if (isFirstLoad.current) return
-		const state = { inputText, sourceSlug, targetSlug, sourceParams, targetParams }
-		localStorage.setItem("DIRECT_CONVERTER_STATE", JSON.stringify(state))
-	}, [inputText, sourceSlug, targetSlug, sourceParams, targetParams])
-
-	const ciphers = useMemo(() => getAllCiphers().map(c => ({ value: c.slug, label: c.title })), [])
+	const ciphers = useMemo(() => getSortedCiphers('title-asc').map(c => ({ value: c.slug, label: c.title })), [])
 
 	const sourceCipher = sourceSlug ? CIPHER_REGISTRY[sourceSlug] : null
 	const targetCipher = targetSlug ? CIPHER_REGISTRY[targetSlug] : null
 
-	useEffect(() => {
-		if (isFirstLoad.current) return
-		if (sourceCipher?.params) {
-			const initial = sourceCipher.params.reduce((acc, p) => ({ ...acc, [p.name]: p.defaultValue }), {})
+	const handleSourceChange = (slug: string) => {
+		setSourceSlug(slug)
+		const cipher = CIPHER_REGISTRY[slug]
+		if (cipher?.params) {
+			const initial = cipher.params.reduce((acc, p) => ({ ...acc, [p.name]: p.defaultValue }), {})
 			setSourceParams(initial)
 		} else {
 			setSourceParams({})
 		}
-	}, [sourceSlug])
+	}
 
-	useEffect(() => {
-		if (isFirstLoad.current) return
-		if (targetCipher?.params) {
-			const initial = targetCipher.params.reduce((acc, p) => ({ ...acc, [p.name]: p.defaultValue }), {})
+	const handleTargetChange = (slug: string) => {
+		setTargetSlug(slug)
+		const cipher = CIPHER_REGISTRY[slug]
+		if (cipher?.params) {
+			const initial = cipher.params.reduce((acc, p) => ({ ...acc, [p.name]: p.defaultValue }), {})
 			setTargetParams(initial)
 		} else {
 			setTargetParams({})
 		}
-	}, [targetSlug])
+	}
 
 	const outputText = useMemo(() => {
 		if (!inputText) return ""
@@ -155,7 +160,7 @@ export default function Home() {
 										placeholder_text="Source Cipher"
 										contents={ciphers}
 										value={sourceSlug}
-										onChange={setSourceSlug}
+										onChange={handleSourceChange}
 									/>
 								</div>
 								<div className="flex-1">
@@ -204,7 +209,7 @@ export default function Home() {
 										placeholder_text="Target Cipher"
 										contents={ciphers}
 										value={targetSlug}
-										onChange={setTargetSlug}
+										onChange={handleTargetChange}
 									/>
 								</div>
 								<div className="flex-1">

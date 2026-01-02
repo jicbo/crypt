@@ -687,8 +687,9 @@ export const getSortedCiphers = (sortBy: 'title-asc' | 'title-desc' | 'added-old
     case 'added-newest':
       return [...ciphers].reverse();
     case 'added-oldest':
-    default:
       return ciphers;
+    default:
+      return [...ciphers].sort((a, b) => a.title.localeCompare(b.title));
   }
 };
 
