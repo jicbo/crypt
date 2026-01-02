@@ -57,15 +57,17 @@ export function Combobox({ placeholder_text = "items", contents = [], value: ext
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className="w-full justify-between"
+					className="w-full justify-between h-9 px-3"
 				>
-					{value
-						? contents.find((content) => content.value === value)?.label
-						: `Select ${placeholder_text}`}
-					<ChevronsUpDown className="opacity-50" />
+					<span className="truncate mr-2">
+						{value
+							? contents.find((content) => content.value === value)?.label
+							: `Select ${placeholder_text}`}
+					</span>
+					<ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[200px] p-0">
+			<PopoverContent className="w-[var(--radix-popover-trigger-width)] min-w-[240px] p-0" align="start">
 				<Command>
 					<CommandInput placeholder={`Search ${placeholder_text}`} className="h-9" />
 					<CommandList>

@@ -1,15 +1,14 @@
 "use client"
 
 import React, { useState, useEffect, useMemo } from "react"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Combobox } from "@/components/ui/combobox"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { ArrowDown, RefreshCcw } from "lucide-react"
+import { RefreshCcw } from "lucide-react"
 import { CIPHER_REGISTRY, getSortedCiphers, CipherTool } from "@/config/cipher-registry"
-import Link from "next/link"
 
 export default function Home() {
 	const [inputText, setInputText] = useState("")
@@ -105,28 +104,34 @@ export default function Home() {
 	}
 
 	const renderParams = (cipher: CipherTool | null, params: Record<string, any>, setParams: React.Dispatch<React.SetStateAction<Record<string, any>>>) => {
+		const numParams = cipher?.params?.length || 0
+		const useTwoCols = numParams >= 3
+
 		return (
-			<div className="grid grid-cols-1 gap-4 mt-0 min-h-[58px]">
-				{cipher?.params?.map(p => (
-					<div key={p.name} className="flex flex-col space-y-2">
-						<Label className="text-xs font-semibold uppercase text-muted-foreground">{p.label}</Label>
-						{p.type === 'number' ? (
-							<Input
-								type="number"
-								value={params[p.name] ?? p.defaultValue}
-								onChange={e => setParams(prev => ({ ...prev, [p.name]: parseInt(e.target.value) || 0 }))}
-								className="h-8"
-							/>
-						) : (
-							<Input
-								type="text"
-								value={params[p.name] ?? p.defaultValue}
-								onChange={e => setParams(prev => ({ ...prev, [p.name]: e.target.value }))}
-								className="h-8"
-							/>
-						)}
-					</div>
-				))}
+			<div className={`grid gap-x-3 gap-y-2 ${useTwoCols ? 'grid-cols-2' : 'grid-cols-1'}`}>
+				{cipher?.params?.map((p, index) => {
+					const isFirstOfThree = numParams === 3 && index === 0
+					return (
+						<div key={p.name} className={`flex flex-col space-y-1.5 ${isFirstOfThree ? 'col-span-2' : ''}`}>
+							<Label className="text-[10px] font-bold uppercase text-muted-foreground leading-none">{p.label}</Label>
+							{p.type === 'number' ? (
+								<Input
+									type="number"
+									value={params[p.name] ?? p.defaultValue}
+									onChange={e => setParams(prev => ({ ...prev, [p.name]: parseInt(e.target.value) || 0 }))}
+									className="h-8 px-2 py-1"
+								/>
+							) : (
+								<Input
+									type="text"
+									value={params[p.name] ?? p.defaultValue}
+									onChange={e => setParams(prev => ({ ...prev, [p.name]: e.target.value }))}
+									className="h-8 px-2 py-1"
+								/>
+							)}
+						</div>
+					)
+				})}
 			</div>
 		)
 	}
@@ -136,7 +141,7 @@ export default function Home() {
 			<div className="flex justify-between items-center mb-10">
 				<div className="space-y-1">
 					<h1 className="text-4xl font-bold tracking-tight">Direct Converter</h1>
-					<p className="text-muted-foreground text-lg">Instant translation between any two cipher formats.</p>
+					<p className="text-muted-foreground text-lg">Instant conversion between any two algorithms.</p>
 				</div>
 				<div className="flex gap-2">
 					<Button variant="outline" size="sm" onClick={() => setInputText("")}>
@@ -148,14 +153,10 @@ export default function Home() {
 			<div className="grid grid-cols-1 lg:grid-cols-7 gap-8 items-stretch">
 				<div className="lg:col-span-3">
 					<Card className="h-full">
-						<CardHeader className="pb-4">
-							<CardTitle className="text-lg">Step 1: Input Source</CardTitle>
-							<CardDescription>Select the source format and parameters.</CardDescription>
-						</CardHeader>
 						<CardContent className="space-y-4">
-							<div className="flex items-start gap-4 h-[90px]">
-								<div className="flex-1 space-y-2">
-									<Label>Source Cipher</Label>
+							<div className="flex flex-col space-y-4 min-h-[90px]">
+								<div className="flex flex-col space-y-1.5 w-full">
+									<Label className="text-[10px] font-bold uppercase text-muted-foreground leading-none">Algorithm</Label>
 									<Combobox
 										placeholder_text="Source Cipher"
 										contents={ciphers}
@@ -163,7 +164,7 @@ export default function Home() {
 										onChange={handleSourceChange}
 									/>
 								</div>
-								<div className="flex-1">
+								<div>
 									{renderParams(sourceCipher, sourceParams, setSourceParams)}
 								</div>
 							</div>
@@ -197,14 +198,10 @@ export default function Home() {
 
 				<div className="lg:col-span-3">
 					<Card className="h-full">
-						<CardHeader className="pb-4">
-							<CardTitle className="text-lg">Step 2: Target Selection</CardTitle>
-							<CardDescription>Select how you want to re-encode the text.</CardDescription>
-						</CardHeader>
 						<CardContent className="space-y-4">
-							<div className="flex items-start gap-4 h-[90px]">
-								<div className="flex-1 space-y-2">
-									<Label>Target Cipher</Label>
+							<div className="flex flex-col space-y-4 min-h-[90px]">
+								<div className="flex flex-col space-y-1.5 w-full">
+									<Label className="text-[10px] font-bold uppercase text-muted-foreground leading-none">Algorithm</Label>
 									<Combobox
 										placeholder_text="Target Cipher"
 										contents={ciphers}
@@ -212,7 +209,7 @@ export default function Home() {
 										onChange={handleTargetChange}
 									/>
 								</div>
-								<div className="flex-1">
+								<div>
 									{renderParams(targetCipher, targetParams, setTargetParams)}
 								</div>
 							</div>
